@@ -14,25 +14,25 @@
             <th scope="col">#</th>
             <th scope="col">Item</th>
             <th scope="col">Borrower</th>
-            <th scope="col">Borrowed Date</th>
-            <th scope="col">Returned Date</th>
+            <th scope="col">Loan Date</th>
+            <th scope="col">Return Date</th>
             <th scope="col">Status</th>
             <th scope="col">Image</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in items" :key="index">
+          <tr v-for="(loan, index) in loans" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
-            <td>nauval</td>
-            <td>14-10-2021</td>
-            <td>20-10-2021</td>
-            <td>returned</td>
+            <td>{{ loan.item.name }}</td>
+            <td>{{ loan.borrower_name }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.return_date }}</td>
+            <td>{{ loan.status }}</td>
             <td>
               <img
-                v-if="item.image"
-                :src="url + item.image"
+                v-if="loan.image"
+                :src="url + loan.image"
                 alt="item image"
                 style="width: 50px; height: 50px"
                 class="object-fit-cover rounded"
@@ -46,15 +46,15 @@
               />
             </td>
             <td>
-              <RouterLink
-                :to="{ name: 'itemEdit', params: { itemId: item.id } }"
+              <!-- <RouterLink
+                :to="{ name: 'loanEdit', params: { loanId: loan.id } }"
               >
                 Edit
-              </RouterLink>
+              </RouterLink> -->
               |
               <a
                 href="#"
-                @click="deleteItem(item.id)"
+                @click="deleteLoan(loan.id)"
                 class="text-danger"
                 >Delete</a
               >
@@ -77,7 +77,7 @@
           return {
               userName: "",
               roleId: "",
-              items: [],
+              loans: [],
               url: "http://127.0.0.1:8000/storage/items/",
           };
       },
@@ -98,13 +98,14 @@
       methods: {
           getItems() {
               axios
-                  .get("http://127.0.0.1:8000/api/item", {
+                  .get("http://127.0.0.1:8000/api/loan", {
                       headers: {
                           Authorization: "Bearer " + localStorage.getItem("token"),
                       },
                   })
                   .then((response) => {
-                      this.items = response.data.data;
+                    console.log(response.data.data);
+                      this.loans = response.data.data;
                   })
                   .catch(function (error) {
                       if (error.response.status == 401) {
