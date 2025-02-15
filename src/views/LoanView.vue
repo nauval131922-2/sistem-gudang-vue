@@ -31,8 +31,8 @@
             <td>{{ loan.status }}</td>
             <td>
               <img
-                v-if="loan.image"
-                :src="url + loan.image"
+                v-if="loan.item.image"
+                :src="url + loan.item.image"
                 alt="item image"
                 style="width: 50px; height: 50px"
                 class="object-fit-cover rounded"
@@ -46,11 +46,11 @@
               />
             </td>
             <td>
-              <!-- <RouterLink
+              <RouterLink
                 :to="{ name: 'loanEdit', params: { loanId: loan.id } }"
               >
                 Edit
-              </RouterLink> -->
+              </RouterLink>
               |
               <a
                 href="#"
@@ -93,10 +93,10 @@
               this.$router.push({ name: "home" });
           }
   
-          this.getItems();
+          this.getLoans();
       },
       methods: {
-          getItems() {
+          getLoans() {
               axios
                   .get("http://127.0.0.1:8000/api/loan", {
                       headers: {
@@ -104,7 +104,6 @@
                       },
                   })
                   .then((response) => {
-                    console.log(response.data.data);
                       this.loans = response.data.data;
                   })
                   .catch(function (error) {
@@ -118,20 +117,20 @@
                       console.log(error);
                   });
           },
-          deleteItem(id) {
-              if (confirm("Are you sure you want to delete this item?")) {
+          deleteLoan(id) {
+              if (confirm("Are you sure you want to delete this loan?")) {
                   axios
-                      .delete(`http://127.0.0.1:8000/api/item/${id}`, {
+                      .delete(`http://127.0.0.1:8000/api/loan/${id}`, {
                           headers: {
                               Authorization: "Bearer " + localStorage.getItem("token"),
                           },
                       })
                       .then((response) => {
-                          alert("Item deleted successfully!"); // Tampilkan pesan sukses
-                          this.getItems(); // Refresh daftar item
+                          alert("Loan deleted successfully!"); // Tampilkan pesan sukses
+                          this.getLoans(); // Refresh daftar loan
                       })
                       .catch((error) => {
-                          console.error("Error deleting item:", error);
+                          console.error("Error deleting loan:", error);
                           alert("Failed to delete item. Please try again.");
                       });
               }

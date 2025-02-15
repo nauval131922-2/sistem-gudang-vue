@@ -1,0 +1,127 @@
+<template lang="">
+  <NavBar :name="userName" :role="roleId" />
+
+  <div class="container">
+    <h2 class="my-5">Edit Loan</h2>
+
+    <form @submit.prevent="updateLoan" enctype="multipart/form-data">
+      <!-- Select Item -->
+      <div class="mb-3">
+        <label for="item" class="form-label">Item</label>
+        <select class="form-select" id="item" v-model="selectedItem">
+          <option value="" disabled>Choose...</option>
+          <option v-for="item in items" :key="item.id" :value="item.id">
+            {{ item.name }}
+          </option>
+        </select>
+      </div>
+    </form>
+  </div>
+</template>
+<script>
+import NavBar from "@/components/NavBar.vue";
+import axios from "axios";
+
+export default {
+  components: {
+    NavBar,
+  },
+  data() {
+    return {
+      userName: "",
+      roleId: "",
+      url: "http://127.0.0.1:8000/storage/items/",
+      selectedItem: "",
+      items: [],
+      borrower: "",
+      // loan date default hari ini
+      loan_date: new Date().toISOString().split("T")[0],
+      file: "",
+      loan: "",
+      loanId: this.$route.params.loanId,
+    };
+  },
+  computed: {
+    // Mencari item yang sesuai dengan ID yang dipilih
+    selectedItemData() {
+      return this.items.find((item) => item.id == this.selectedItem) || null;
+    },
+  },
+  mounted() {
+    this.userName = localStorage.getItem("name");
+    this.roleId = localStorage.getItem("role_id");
+
+    if (!this.userName) {
+      this.$router.push({ name: "login" });
+    }
+
+    if (this.roleId != 1) {
+      this.$router.push({ name: "home" });
+    }
+
+    this.getItems();
+    this.getLoan();
+  },
+  methods: {
+    getLoan() {
+      axios
+        .get("http://127.0.0.1:8000/api/loan/" + this.loanId, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.loan = response.data.data;
+        })
+        .catch(function (error) {});
+    },
+
+    getItems() {
+      axios
+        .get("http://127.0.0.1:8000/api/item", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.items = response.data.data;
+        })
+        .catch(function (error) {
+          console.log("Error response:", error.response.data);
+          alert(error.response.data.message || "An error occurred");
+        });
+    },
+    updateLoan() {
+      if (!this.selectedItem || !this.borrower || !this.loan_date) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("item_id", this.selectedItem);
+      formData.append("borrower_name", this.borrower);
+      formData.append("loan_date", this.loan_date);
+
+      axios
+        .post("http://127.0.0.1:8000/api/loan/" + this.itemId, formData, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.$router.push({ name: "item" });
+          // alert
+        })
+        .catch(function (error) {
+          console.log("Error response:", error.response.data);
+          alert(error.response.data.message || "An error occurred");
+        });
+    },
+    onFileChange(e) {
+      let file = e.target.files[0];
+      this.item.image_file = file;
+    },
+  },
+};
+</script>
+<style lang=""></style>

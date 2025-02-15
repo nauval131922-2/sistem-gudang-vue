@@ -4,6 +4,8 @@ import ItemView from '../views/ItemView.vue'
 import ItemCreateView from '../views/ItemCreateView.vue'
 import ItemEditView from '../views/ItemEditView.vue'
 import LoanView from '../views/LoanView.vue'
+import LoanCreateView from '../views/LoanCreateView.vue'
+import LoanEditView from '../views/LoanEditView.vue'
 import LoginView from '../views/LoginView.vue'
 import OrderView from '../views/OrderView.vue'
 import ProductView from '../views/ProductView.vue'
@@ -44,6 +46,16 @@ const router = createRouter({
       path: '/loan',
       name: 'loan',
       component: LoanView,
+    },
+    {
+      path: '/loan/create',
+      name: 'loanCreate',
+      component: LoanCreateView
+    },
+    {
+      path: '/loan/edit/:loanId',
+      name: 'loanEdit',
+      component: LoanEditView,
     },
     {
       path: '/login',

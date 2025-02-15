@@ -1,1 +1,16 @@
-log out ketika sudah lama tidak digunakan
+general
+	log out ketika sudah lama tidak digunakan
+
+home
+	ok
+
+item
+	ok
+
+loan
+	add
+		ok
+	delete
+		ok
+	edit
+		
