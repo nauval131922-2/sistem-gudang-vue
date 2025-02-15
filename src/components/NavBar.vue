@@ -26,6 +26,9 @@
               <RouterLink to="/loan">Loan</RouterLink>
             </li>
             <li v-if="role == 1" class="nav-item me-3">
+              <RouterLink to="/report">Report</RouterLink>
+            </li>
+            <li v-if="role == 1" class="nav-item me-3">
               <RouterLink to="/product">Product</RouterLink>
             </li>
             <li v-if="role == 1" class="nav-item me-3">

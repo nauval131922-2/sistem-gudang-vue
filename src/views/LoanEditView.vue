@@ -15,6 +15,49 @@
           </option>
         </select>
       </div>
+
+      <!-- Show Item Image -->
+      <div v-if="selectedItemData">
+        <div class="mb-3">
+          <label for="image" class="form-label">Image</label><br />
+          <img :src="url + selectedItemData.image" alt="" width="200px" />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="borrower" class="form-label">Borrower</label>
+        <input
+          type="text"
+          class="form-control"
+          id="borrower"
+          v-model="loan.borrower_name"
+        />
+      </div>
+
+      <!-- loan date -->
+      <div class="mb-3">
+        <label for="loan_date" class="form-label">Loan Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="loan_date"
+          v-model="loan.loan_date"
+        />
+      </div>
+
+      <!-- return date -->
+      <div class="mb-3">
+        <label for="return_date" class="form-label">Return Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="return_date"
+          v-model="loan.return_date"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary form-control">Submit</button>
+
     </form>
   </div>
 </template>
@@ -36,6 +79,7 @@ export default {
       borrower: "",
       // loan date default hari ini
       loan_date: new Date().toISOString().split("T")[0],
+      return_date: "",
       file: "",
       loan: "",
       loanId: this.$route.params.loanId,
@@ -72,8 +116,9 @@ export default {
         })
         .then((response) => {
           this.loan = response.data.data;
+          this.selectedItem = this.loan.item_id; // Set selectedItem sesuai data loan
         })
-        .catch(function (error) {});
+        .catch(function (error) { });
     },
 
     getItems() {
@@ -92,25 +137,34 @@ export default {
         });
     },
     updateLoan() {
-      if (!this.selectedItem || !this.borrower || !this.loan_date) {
+      if (!this.selectedItem || !this.loan.borrower_name || !this.loan.loan_date) {
         alert("Please fill all fields");
         return;
       }
 
       let formData = new FormData();
       formData.append("item_id", this.selectedItem);
-      formData.append("borrower_name", this.borrower);
-      formData.append("loan_date", this.loan_date);
+      formData.append("borrower_name", this.loan.borrower_name);
+      formData.append("loan_date", this.loan.loan_date);
+      formData.append("return_date", this.loan.return_date);
+
+      // jika return date diisi
+      if (this.loan.return_date) {
+        formData.append("status", "returned");
+      } else {
+        formData.append("status", "borrowed");
+      }
+
+      formData.append("_method", "patch");
 
       axios
-        .post("http://127.0.0.1:8000/api/loan/" + this.itemId, formData, {
+        .post("http://127.0.0.1:8000/api/loan/" + this.loanId, formData, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
         .then((response) => {
-          this.$router.push({ name: "item" });
-          // alert
+          this.$router.push({ name: "loan" });
         })
         .catch(function (error) {
           console.log("Error response:", error.response.data);

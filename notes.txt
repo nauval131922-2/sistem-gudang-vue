@@ -1,5 +1,6 @@
 general
 	log out ketika sudah lama tidak digunakan
+	barcode
 
 home
 	ok
@@ -13,4 +14,8 @@ loan
 	delete
 		ok
 	edit
+		ok
+
+report
+	
 		

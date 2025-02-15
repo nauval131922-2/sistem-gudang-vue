@@ -1,16 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+
 import ItemView from '../views/ItemView.vue'
 import ItemCreateView from '../views/ItemCreateView.vue'
 import ItemEditView from '../views/ItemEditView.vue'
+
 import LoanView from '../views/LoanView.vue'
 import LoanCreateView from '../views/LoanCreateView.vue'
 import LoanEditView from '../views/LoanEditView.vue'
+
+import LoanReportView from '../views/LoanReportView.vue'
+
 import LoginView from '../views/LoginView.vue'
+
 import OrderView from '../views/OrderView.vue'
+
 import ProductView from '../views/ProductView.vue'
 import ProductUpdateView from '../views/ProductUpdateView.vue'
 import ProductCreateView from '../views/ProductCreateView.vue'
+
 import OrderListView from '../views/OrderListView.vue'
 import OrderDetailView from '../views/OrderDetailView.vue'
 import OrderReportView from '../views/OrderReportView.vue'
@@ -56,6 +64,12 @@ const router = createRouter({
       path: '/loan/edit/:loanId',
       name: 'loanEdit',
       component: LoanEditView,
+    },
+    // report
+    {
+      path: '/report',
+      name: 'report',
+      component: LoanReportView
     },
     {
       path: '/login',
